@@ -51,56 +51,44 @@ const Register = () => {
           })
           .catch((error) => {
             const errorCode = error.code;
-            toast.error(`Opps--${errorCode}`, {
-              className: "w-[300px] h-[100px] text-xl font-bold ",
-              removeDelay: 1000,
-              iconTheme: {
-                primary: "#18f115",
-                secondary: "#18f115",
-              },
-
-              style: {
-                border: "1px solid black",
-                color: "white",
-                backgroundImage: "linear-gradient(to top left,#18f115,#18f115)",
-              },
-            });
+          //error toast
             console.log(error);
           });
-
-        toast.success(`User Registered SuccessFully`, {
-          className: "w-[300px] h-[100px] text-xl font-bold ",
-          removeDelay: 1000,
-          iconTheme: {
-            primary: "#18f115",
-            secondary: "#18f115",
-          },
-          style: {
-            border: "1px solid 18f115",
-            color: "white",
-            backgroundImage:
-              "linear-gradient(to bottom right, #18f115, #18f115)",
-          },
-        });
+//success toast here
+        // toast.success(`User Registered SuccessFully`, {
+        //   className: "w-[300px] h-[100px] text-xl font-bold ",
+        //   removeDelay: 1000,
+        //   iconTheme: {
+        //     primary: "#18f115",
+        //     secondary: "#18f115",
+        //   },
+        //   style: {
+        //     border: "1px solid 18f115",
+        //     color: "white",
+        //     backgroundImage:
+        //       "linear-gradient(to bottom right, #18f115, #18f115)",
+        //   },
+        // });
         // navigate('/')
         navigate(`${registerLocation.state?.from || "/"}`, { replace: true });
       })
       .catch((error) => {
         const errorCode = error.code;
-        toast.error(`Opps--${errorCode}`, {
-          className: "w-[300px] h-[100px] text-xl font-bold ",
-          removeDelay: 1000,
-          iconTheme: {
-            primary: "#16061e",
-            secondary: "#ef54e2",
-          },
-          style: {
-            border: "1px solid black",
-            color: "white",
-            backgroundImage:
-              "linear-gradient(to bottom right,#0d0518,#87d0c3, #600e8c)",
-          },
-        });
+        //error toast
+        // toast.error(`Opps--${errorCode}`, {
+        //   className: "w-[300px] h-[100px] text-xl font-bold ",
+        //   removeDelay: 1000,
+        //   iconTheme: {
+        //     primary: "#16061e",
+        //     secondary: "#ef54e2",
+        //   },
+        //   style: {
+        //     border: "1px solid black",
+        //     color: "white",
+        //     backgroundImage:
+        //       "linear-gradient(to bottom right,#0d0518,#87d0c3, #600e8c)",
+        //   },
+        // });
         console.log(error);
       });
   };
