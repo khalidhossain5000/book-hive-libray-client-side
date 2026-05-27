@@ -1,4 +1,5 @@
 import Banner from '@/components/homePage/Banner/Banner';
+import CategoriesSection from '@/components/homePage/Category/CategoriesSection';
 import React from 'react';
 
 const HomePage = () => {
@@ -6,7 +7,9 @@ const HomePage = () => {
         <div>
        
       
-            <main><Banner/></main>
+            <main><Banner/>
+            <CategoriesSection/>
+            </main>
         </div>
     );
 };
