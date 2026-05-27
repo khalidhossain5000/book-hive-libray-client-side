@@ -45,7 +45,9 @@ const Navbar = () => {
             {/* LOGO */}
             <Link href="/">
               <h1 className="text-3xl font-extrabold font-montserrat">
-                <span className="text-gray-900 dark:text-text-primary" >Book</span>
+                <span className="text-gray-900 dark:text-text-primary">
+                  Book
+                </span>
                 <span className="text-teal-600 dark:text-primary">Hive</span>
               </h1>
             </Link>
@@ -73,10 +75,16 @@ const Navbar = () => {
 
             {/* LOGIN BUTTON */}
             <div className="hidden md:flex items-center gap-4 font-inter">
-             
-              <PrimaryButton className="rounded-md px-4 lg:px-6 py-2 ">Register</PrimaryButton>
-
-             <SecondaryButton className="rounded-md px-4 lg:px-6 py-2">Login</SecondaryButton>
+              <Link href="/auth/register">
+                <PrimaryButton className="rounded-md px-4 lg:px-6 py-2 ">
+                  Register
+                </PrimaryButton>
+              </Link>
+              <Link href="/auth/login">
+                <SecondaryButton className="rounded-md px-4 lg:px-6 py-2">
+                  Login
+                </SecondaryButton>
+              </Link>
             </div>
 
             {/* MOBILE MENU BUTTON */}
