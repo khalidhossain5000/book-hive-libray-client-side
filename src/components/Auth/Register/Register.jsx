@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,6 +7,103 @@ import authImg from "../../../assets/AuthBg/auth-pagesbds.png";
 import { FcGoogle } from "react-icons/fc";
 
 const Register = () => {
+    
+  const handleRegister = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const { email, password, name, photo } = Object.fromEntries(
+      formData.entries()
+    );
+    setPasswordError("");
+    // password validation start
+    const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z]).{6,}$/;
+    if (passwordPattern.test(password) == false) {
+      setPasswordError(
+        "Password Length must be at least 6 characters And Must have an Uppercase and a Lowercase letter"
+      );
+      return;
+    }
+    // password validation end
+    // FIREBASE USER
+    createUser(email, password)
+      .then((result) => {
+        const user = result.user;
+        // data sending to the DB START
+        const userInfo = {
+          name,
+          email,
+          role: "user", //default role
+          profilePic: photo,
+        };
+        axios
+          .post(
+            "https://assignment-11-polished-server-side.vercel.app/users",
+            userInfo
+          )
+          .then(() => alert("User Send to the db successfully"))
+          .catch((error) => console.log(error));
+        // data sending to the DB ENDS
+        //update profile here
+        updateUserProfile({ displayName: name, photoURL: photo })
+          .then(() => {
+            setUser({ ...user, displayName: name, photoURL: photo });
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            toast.error(`Opps--${errorCode}`, {
+              className: "w-[300px] h-[100px] text-xl font-bold ",
+              removeDelay: 1000,
+              iconTheme: {
+                primary: "#18f115",
+                secondary: "#18f115",
+              },
+
+              style: {
+                border: "1px solid black",
+                color: "white",
+                backgroundImage: "linear-gradient(to top left,#18f115,#18f115)",
+              },
+            });
+            console.log(error);
+          });
+
+        toast.success(`User Registered SuccessFully`, {
+          className: "w-[300px] h-[100px] text-xl font-bold ",
+          removeDelay: 1000,
+          iconTheme: {
+            primary: "#18f115",
+            secondary: "#18f115",
+          },
+          style: {
+            border: "1px solid 18f115",
+            color: "white",
+            backgroundImage:
+              "linear-gradient(to bottom right, #18f115, #18f115)",
+          },
+        });
+        // navigate('/')
+        navigate(`${registerLocation.state?.from || "/"}`, { replace: true });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        toast.error(`Opps--${errorCode}`, {
+          className: "w-[300px] h-[100px] text-xl font-bold ",
+          removeDelay: 1000,
+          iconTheme: {
+            primary: "#16061e",
+            secondary: "#ef54e2",
+          },
+          style: {
+            border: "1px solid black",
+            color: "white",
+            backgroundImage:
+              "linear-gradient(to bottom right,#0d0518,#87d0c3, #600e8c)",
+          },
+        });
+        console.log(error);
+      });
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4 transition-colors duration-300">
       {/* Main Container */}
