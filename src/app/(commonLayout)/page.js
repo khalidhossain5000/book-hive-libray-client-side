@@ -1,12 +1,12 @@
-import Navbar from '@/components/shared/Navbar/Navbar';
+import Banner from '@/components/homePage/Banner/Banner';
 import React from 'react';
 
 const HomePage = () => {
     return (
         <div>
-        <header>
-            <Navbar/>
-        </header> 
+       
+      
+            <main><Banner/></main>
         </div>
     );
 };

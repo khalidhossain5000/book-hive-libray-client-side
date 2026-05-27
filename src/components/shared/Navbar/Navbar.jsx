@@ -37,7 +37,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="w-full border-b dark:border-b-0 dark:shadow-2xl shadow-sm border-gray-200 bg-white dark:bg-background sticky top-0 z-50">
+    <header className="w-full border-b dark:border-b-0 dark:shadow-2xl shadow-sm border-gray-200 bg-white dark:bg-background z-999999">
       <nav className="max-w-7xl mx-auto px-4 lg:px-8">
         <div className="h-[80px] flex items-center justify-between">
           {/* LEFT SIDE */}
@@ -67,7 +67,7 @@ const Navbar = () => {
             ))}
           </div>
           {/* RIGHT SIDE */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 relative z-[999999999999999999999999]">
             {/* Theme toggle */}
             <ModeToggle />
 
