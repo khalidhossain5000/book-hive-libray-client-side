@@ -5,9 +5,10 @@ import Link from "next/link";
 import authImg from "../../../assets/AuthBg/auth-pagesbds.png";
 // React Icon Import
 import { FcGoogle } from "react-icons/fc";
+import useAxios from "@/hooks/useAxios";
 
 const Register = () => {
-    
+    const axiosInstance=useAxios()
   const handleRegister = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -34,11 +35,11 @@ const Register = () => {
           name,
           email,
           role: "user", //default role
-          profilePic: photo,
+          profilePic: "https://i.ibb.co.com/fGHXvNYc/profile-i.jpg", //default profile pic  
         };
-        axios
+        axiosInstance
           .post(
-            "https://assignment-11-polished-server-side.vercel.app/users",
+            "/users",
             userInfo
           )
           .then(() => alert("User Send to the db successfully"))
