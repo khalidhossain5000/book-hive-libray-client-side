@@ -1,8 +1,9 @@
+
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ModeToggle } from "@/components/shared/ThemeToggle/ModeToggle";
 import { 
   LayoutDashboard, 
@@ -18,6 +19,8 @@ import useRole from "@/hooks/useRole";
 import GlobalLoading from "../shared/GlobalLoading";
 import useAuth from "@/hooks/useAuth";
 import Image from "next/image";
+import { toast } from "sonner";
+
 
 const demoRoutes = [
   {
@@ -26,13 +29,13 @@ const demoRoutes = [
     icon: LayoutDashboard,
   },
   {
-    title: "Users",
-    href: "/dashboard/users",
+    title: "Manage Users",
+    href: "/dashboard/manage-users",
     icon: Users,
   },
   {
-    title: "Books",
-    href: "/dashboard/books",
+    title: "Add Book",
+    href: "/dashboard/add-book",
     icon: BookOpen,
   }
 ];
@@ -44,9 +47,33 @@ export function DashboardShell({ children }) {
   const closeSidebar = () => setIsSidebarOpen(false);
 
   const {role,roleLoading}=useRole()
-  const {user,logout,loading}=useAuth()
+  const {user,logOutUser,loading}=useAuth()
+  const router=useRouter()
   console.log(role,roleLoading,'this is role and role loading',user)
   if(roleLoading || loading) return <GlobalLoading/>
+
+
+    const handleLogout = async () => {
+      logOutUser().then(() => {
+        toast.success(`Log Out Successfull`, {
+          position: "top-center",
+          className: "w-[260px] h-[72px] text-sm font-semibold",
+          removeDelay: 1200,
+          iconTheme: {
+            primary: "#f87171",
+            secondary: "#fee2e2",
+          },
+          style: {
+            border: "1px solid rgba(248, 113, 113, 0.65)",
+            color: "white",
+            backgroundImage: "linear-gradient(135deg, #dc2626, #ef4444, #f87171)",
+            boxShadow:
+              "0 20px 40px rgba(220, 38, 38, 0.35), 0 0 25px rgba(248, 113, 113, 0.45)",
+          },
+        })
+        router.push("/")
+      });
+    };
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       {/* Mobile Sidebar Overlay */}
@@ -123,10 +150,10 @@ export function DashboardShell({ children }) {
           </Link>
           <button
             onClick={() => {
-              // Handle logout logic here
+              handleLogout()
               closeSidebar();
             }}
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-inter font-medium transition-colors text-red-500 hover:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-400/10 w-full text-left"
+            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-inter font-medium transition-colors text-red-500 hover:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-400/10 w-full text-left cursor-pointer"
           >
             <LogOut className="h-5 w-5 opacity-80" />
             Logout

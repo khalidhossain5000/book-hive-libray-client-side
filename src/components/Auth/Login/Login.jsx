@@ -88,9 +88,9 @@ const Login = () => {
         console.log(result);
         router.push("/");
       })
-      .then((error) => {
+      .catch((error) => {
      
-        toast.error(`Opps--${error.code}`, {
+        toast.error(`Opps--${error?.code}`, {
           className: "w-[300px] h-[50px] text-xl font-bold ",
           removeDelay: 1000,
           iconTheme: {

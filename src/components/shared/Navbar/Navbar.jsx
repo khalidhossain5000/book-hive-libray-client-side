@@ -29,17 +29,28 @@ export const navLinks = [
     id: 3,
     name: "Add Book",
     path: "/add-book",
+    private: true,
   },
   {
     id: 4,
     name: "Borrowed Books",
     path: "/borrowed-books",
+    private: true,
+  },
+  {
+    id: 5,
+    name: "Dashboard",
+    path: "/dashboard",
+    private: true,
   },
 ];
 const Navbar = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const { user, loading, logOutUser } = useAuth();
+  const filteredNavLinks = user
+    ? navLinks
+    : navLinks.filter((link) => !link.private);
 
   const handleLogout = async () => {
     logOutUser().then(() => {
@@ -62,7 +73,6 @@ const Navbar = () => {
     });
   };
 
-  console.log(user, "this is user from navbar");
   if (loading) return <h2>Loadings......</h2>;
 
   return (
@@ -84,7 +94,7 @@ const Navbar = () => {
           {/* middle side */}
           {/* DESKTOP NAV */}
           <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
+            {filteredNavLinks.map((link) => (
               <Link
                 key={link.id}
                 href={link.path}
@@ -102,20 +112,26 @@ const Navbar = () => {
             {/* Theme toggle */}
             <ModeToggle />
 
-            {/* AUTH: show user photo if available, otherwise show auth buttons */}
-            {user && user.photoURL ? (
+            {/* AUTH: show user info and logout when signed in, otherwise show auth buttons */}
+            {user ? (
               <div className="hidden md:flex items-center gap-3">
                 <Link
                   href="/dashboard"
                   className="flex items-center hover:opacity-80 transition-opacity duration-200"
                 >
-                  <Image
-                    src={user.photoURL}
-                    alt={user.displayName || "User"}
-                    width={40}
-                    height={40}
-                    className="w-12 h-12 rounded-full object-cover border-2 border-teal-600 hover:border-teal-700 transition-colors duration-200"
-                  />
+                  {user.photoURL ? (
+                    <Image
+                      src={user.photoURL}
+                      alt={user.displayName || "User"}
+                      width={40}
+                      height={40}
+                      className="w-12 h-12 rounded-full object-cover border-2 border-teal-600 hover:border-teal-700 transition-colors duration-200"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded-full bg-teal-600 text-white flex items-center justify-center font-semibold text-lg">
+                      {user.displayName?.charAt(0).toUpperCase() || "U"}
+                    </div>
+                  )}
                 </Link>
                 <button
                   onClick={handleLogout}
@@ -157,7 +173,9 @@ const Navbar = () => {
         <MobileNavbar
           isOpen={isOpen}
           setIsOpen={setIsOpen}
-          navLinks={navLinks}
+          navLinks={filteredNavLinks}
+          user={user}
+          handleLogout={handleLogout}
         />
       </div>
     </header>
