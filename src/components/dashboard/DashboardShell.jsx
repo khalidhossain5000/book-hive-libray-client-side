@@ -137,7 +137,7 @@ export function DashboardShell({ children }) {
             Preferences
           </p>
           <Link
-            href="/dashboard/settings"
+            href="/dashboard/profile-setting"
             onClick={closeSidebar}
             className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-inter font-medium transition-colors ${
               pathname === "/dashboard/settings"
@@ -145,7 +145,7 @@ export function DashboardShell({ children }) {
                 : "text-foreground/70 hover:text-foreground hover:bg-muted/50"
             }`}
           >
-            <Settings className={`h-5 w-5 ${pathname === "/dashboard/settings" ? "text-primary" : "text-foreground/50"}`} />
+            <Settings className={`h-5 w-5 ${pathname === "/dashboard/profile-settings" ? "text-primary" : "text-foreground/50"}`} />
             Settings
           </Link>
           <button
