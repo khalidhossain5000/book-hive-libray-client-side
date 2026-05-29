@@ -1,6 +1,7 @@
 import { Montserrat, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -34,6 +35,8 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           {children}
+                  <Toaster/>
+
         </ThemeProvider>
       </body>
     </html>

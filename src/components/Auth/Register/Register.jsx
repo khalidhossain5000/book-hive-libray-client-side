@@ -1,27 +1,35 @@
-"use client"
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { toast } from "sonner";
 import authImg from "../../../assets/AuthBg/auth-pagesbds.png";
 // React Icon Import
 import { FcGoogle } from "react-icons/fc";
 import useAxios from "@/hooks/useAxios";
+import useAuth from "@/hooks/useAuth";
 
 const Register = () => {
-    const axiosInstance=useAxios()
+  const axiosInstance = useAxios();
+  const [passwordError, setPasswordError] = useState("");
+  const [showError, setShowError] = useState("");
+  const { createUser, updateUserProfile, setUser, loading } = useAuth();
+
   const handleRegister = (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    const { email, password, name, photo } = Object.fromEntries(
-      formData.entries()
+    const { email, password, name } = Object.fromEntries(
+      formData.entries(),
     );
+    console.log(email, password, name, "this is form data over here");
     setPasswordError("");
+    setShowError("");
     // password validation start
     const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z]).{6,}$/;
     if (passwordPattern.test(password) == false) {
       setPasswordError(
-        "Password Length must be at least 6 characters And Must have an Uppercase and a Lowercase letter"
+        "Password Length must be at least 6 characters And Must have an Uppercase and a Lowercase letter",
       );
       return;
     }
@@ -30,66 +38,50 @@ const Register = () => {
     createUser(email, password)
       .then((result) => {
         const user = result.user;
+        setShowError("");
         // data sending to the DB START
         const userInfo = {
           name,
           email,
           role: "user", //default role
-          profilePic: "https://i.ibb.co.com/fGHXvNYc/profile-i.jpg", //default profile pic  
+          profilePic: "https://i.ibb.co.com/fGHXvNYc/profile-i.jpg", //default profile pic
         };
         axiosInstance
-          .post(
-            "/users",
-            userInfo
-          )
-          .then(() => alert("User Send to the db successfully"))
-          .catch((error) => console.log(error));
-        // data sending to the DB ENDS
-        //update profile here
-        updateUserProfile({ displayName: name, photoURL: photo })
-          .then(() => {
-            setUser({ ...user, displayName: name, photoURL: photo });
-          })
+          .post("/users", userInfo)
+          .then(() => {})
           .catch((error) => {
-            const errorCode = error.code;
-          //error toast
+            const message = error.message || "Unable to save user.";
+            setShowError(message);
+            toast.error(`Unable to save user: ${message}`, {
+              position: "top-right",
+            });
             console.log(error);
           });
-//success toast here
-        // toast.success(`User Registered SuccessFully`, {
-        //   className: "w-[300px] h-[100px] text-xl font-bold ",
-        //   removeDelay: 1000,
-        //   iconTheme: {
-        //     primary: "#18f115",
-        //     secondary: "#18f115",
-        //   },
-        //   style: {
-        //     border: "1px solid 18f115",
-        //     color: "white",
-        //     backgroundImage:
-        //       "linear-gradient(to bottom right, #18f115, #18f115)",
-        //   },
-        // });
-        // navigate('/')
-        navigate(`${registerLocation.state?.from || "/"}`, { replace: true });
+        // data sending to the DB ENDS
+        //update profile here
+        updateUserProfile({ displayName: name, photoURL: "https://i.ibb.co.com/fGHXvNYc/profile-i.jpg" })
+          .then(() => {
+            setUser({ ...user, displayName: name, photoURL: "https://i.ibb.co.com/fGHXvNYc/profile-i.jpg" });
+            toast.success("User registered successfully.", {
+              position: "top-center",
+            });
+          })
+          .catch((error) => {
+            const message = error.message || "please try again";
+            setShowError(message);
+            toast.error(`Profile update failed: ${message}`, {
+              position: "top-right",
+            });
+            console.log(error);
+          });
+        // navigate(`${registerLocation.state?.from || "/"}`, { replace: true });
       })
       .catch((error) => {
-        const errorCode = error.code;
-        //error toast
-        // toast.error(`Opps--${errorCode}`, {
-        //   className: "w-[300px] h-[100px] text-xl font-bold ",
-        //   removeDelay: 1000,
-        //   iconTheme: {
-        //     primary: "#16061e",
-        //     secondary: "#ef54e2",
-        //   },
-        //   style: {
-        //     border: "1px solid black",
-        //     color: "white",
-        //     backgroundImage:
-        //       "linear-gradient(to bottom right,#0d0518,#87d0c3, #600e8c)",
-        //   },
-        // });
+        const message = error.message || error.code || "Registration failed.";
+        setShowError(message);
+        toast.error(`Oops - ${message}`, {
+          position: "top-right",
+        });
         console.log(error);
       });
   };
@@ -132,13 +124,14 @@ const Register = () => {
               Join BookiHive today and start managing your books.
             </p>
 
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleRegister}>
               <div>
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                   Full Name
                 </label>
                 <input
                   type="text"
+                  name="name"
                   placeholder="John Doe"
                   className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-teal-500 outline-none transition-all dark:text-white"
                   required
@@ -151,6 +144,7 @@ const Register = () => {
                 </label>
                 <input
                   type="email"
+                  name="email"
                   placeholder="name@example.com"
                   className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-teal-500 outline-none transition-all dark:text-white"
                   required
@@ -163,15 +157,25 @@ const Register = () => {
                 </label>
                 <input
                   type="password"
+                  name="password"
                   placeholder="••••••••"
                   className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-teal-500 outline-none transition-all dark:text-white"
                   required
                 />
               </div>
 
-              <button className="w-full py-3 bg-teal-800 hover:bg-teal-700 text-white font-bold rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-teal-900/20 mt-4 cursor-pointer">
-                Create Account
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full py-3 bg-teal-800 text-white font-bold rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-teal-900/20 mt-4 ${loading ? "opacity-70 cursor-not-allowed" : "hover:bg-teal-700"}`}
+              >
+                {loading ? "Creating Account..." : "Create Account"}
               </button>
+              {(passwordError || showError) && (
+                <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-600 dark:bg-red-950/40 dark:text-red-300">
+                  {passwordError || showError}
+                </div>
+              )}
             </form>
 
             <div className="relative my-8 text-center">
