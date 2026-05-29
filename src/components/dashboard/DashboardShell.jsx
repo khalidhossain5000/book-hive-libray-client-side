@@ -1,0 +1,176 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ModeToggle } from "@/components/shared/ThemeToggle/ModeToggle";
+import { 
+  LayoutDashboard, 
+  Users, 
+  Settings, 
+  Menu, 
+  X, 
+  BookOpen,
+  LogOut
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const demoRoutes = [
+  {
+    title: "Dashboard",
+    href: "/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    title: "Users",
+    href: "/dashboard/users",
+    icon: Users,
+  },
+  {
+    title: "Books",
+    href: "/dashboard/books",
+    icon: BookOpen,
+  }
+];
+
+export function DashboardShell({ children }) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const pathname = usePathname();
+
+  const closeSidebar = () => setIsSidebarOpen(false);
+
+  return (
+    <div className="flex h-screen overflow-hidden bg-background">
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
+          onClick={closeSidebar}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed flex flex-col inset-y-0 left-0 z-50 w-64 transform border-r border-slate-200 dark:border-slate-700 bg-background transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex h-16 shrink-0 items-center justify-between px-6 border-b border-slate-200 dark:border-slate-700">
+          <Link href="/dashboard" className="text-2xl font-bold font-montserrat text-primary">
+            BookHive
+          </Link>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="lg:hidden text-foreground/70" 
+            onClick={closeSidebar}
+          >
+            <X className="h-5 w-5" />
+          </Button>
+        </div>
+        
+        {/* Top Navigation */}
+        <div className="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-2">
+          <p className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-foreground/40 font-inter">
+            Main Menu
+          </p>
+          {demoRoutes.map((route) => {
+            const isActive = pathname === route.href;
+            const Icon = route.icon;
+            
+            return (
+              <Link
+                key={route.href}
+                href={route.href}
+                onClick={closeSidebar}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-inter font-medium transition-colors ${
+                  isActive 
+                    ? "bg-primary/10 text-primary" 
+                    : "text-foreground/70 hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                <Icon className={`h-5 w-5 ${isActive ? "text-primary" : "text-foreground/50"}`} />
+                {route.title}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Bottom Navigation */}
+        <div className="p-4 border-t border-slate-200 dark:border-slate-700 flex flex-col gap-2">
+          <p className="px-3 mb-1 text-xs font-semibold uppercase tracking-wider text-foreground/40 font-inter">
+            Preferences
+          </p>
+          <Link
+            href="/dashboard/settings"
+            onClick={closeSidebar}
+            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-inter font-medium transition-colors ${
+              pathname === "/dashboard/settings"
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:text-foreground hover:bg-muted/50"
+            }`}
+          >
+            <Settings className={`h-5 w-5 ${pathname === "/dashboard/settings" ? "text-primary" : "text-foreground/50"}`} />
+            Settings
+          </Link>
+          <button
+            onClick={() => {
+              // Handle logout logic here
+              closeSidebar();
+            }}
+            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-inter font-medium transition-colors text-red-500 hover:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-400/10 w-full text-left"
+          >
+            <LogOut className="h-5 w-5 opacity-80" />
+            Logout
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {/* Header */}
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 dark:border-slate-700 shadow-lg bg-background px-6">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden text-foreground/70"
+              onClick={() => setIsSidebarOpen(true)}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+            <div className="flex flex-col lg:hidden">
+              <h1 className="text-lg font-semibold font-montserrat leading-none">
+                BookHive
+              </h1>
+            </div>
+            
+            {/* Page Title (Desktop) */}
+            <div className="hidden lg:flex flex-col">
+              <h1 className="text-xl font-bold font-montserrat text-foreground">
+                Dashboard
+              </h1>
+              <p className="text-xs text-foreground/50 font-inter mt-0.5">
+                Manage your library effectively
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-5">
+            <ModeToggle />
+            <div className="h-9 w-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold shadow-sm cursor-pointer hover:bg-primary/20 transition-colors">
+              U
+            </div>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-y-auto bg-[#e2e8f0] dark:bg-[#020618] p-6">
+          <div className="font-inter text-foreground max-w-7xl mx-auto">
+            {children}
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
