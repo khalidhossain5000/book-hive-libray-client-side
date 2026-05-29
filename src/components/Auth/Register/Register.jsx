@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import authImg from "../../../assets/AuthBg/auth-pagesbds.png";
 // React Icon Import
@@ -10,6 +11,7 @@ import useAxios from "@/hooks/useAxios";
 import useAuth from "@/hooks/useAuth";
 
 const Register = () => {
+  const router = useRouter();
   const axiosInstance = useAxios();
   const [passwordError, setPasswordError] = useState("");
   const [showError, setShowError] = useState("");
@@ -19,9 +21,7 @@ const Register = () => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    const { email, password, name } = Object.fromEntries(
-      formData.entries(),
-    );
+    const { email, password, name } = Object.fromEntries(formData.entries());
     console.log(email, password, name, "this is form data over here");
     setPasswordError("");
     setShowError("");
@@ -44,7 +44,7 @@ const Register = () => {
           name,
           email,
           role: "user", //default role
-          profilePic: "https://i.ibb.co.com/fGHXvNYc/profile-i.jpg", //default profile pic
+          profilePic: "https://i.ibb.co/fGHXvNYc/profile-i.jpg", //default profile pic
         };
         axiosInstance
           .post("/users", userInfo)
@@ -59,12 +59,20 @@ const Register = () => {
           });
         // data sending to the DB ENDS
         //update profile here
-        updateUserProfile({ displayName: name, photoURL: "https://i.ibb.co.com/fGHXvNYc/profile-i.jpg" })
+        updateUserProfile({
+          displayName: name,
+          photoURL: "https://i.ibb.co/fGHXvNYc/profile-i.jpg",
+        })
           .then(() => {
-            setUser({ ...user, displayName: name, photoURL: "https://i.ibb.co.com/fGHXvNYc/profile-i.jpg" });
+            setUser({
+              ...user,
+              displayName: name,
+              photoURL: "https://i.ibb.co.com/fGHXvNYc/profile-i.jpg",
+            });
             toast.success("User registered successfully.", {
               position: "top-center",
             });
+            router.push("/");
           })
           .catch((error) => {
             const message = error.message || "please try again";
@@ -85,6 +93,52 @@ const Register = () => {
         console.log(error);
       });
   };
+
+
+
+
+  
+    //google login
+  
+    const handleGoogleLogin = () => {
+      handleGoogleUser()
+        .then((result) => {
+          toast.success("Google Logged In Successfull", {
+            className: "w-[300px] h-[50px] text-xl font-bold",
+            removeDelay: 1000,
+            position: "top-left",
+            iconTheme: {
+              primary: "#16061e",
+              secondary: "#ef54e2",
+            },
+            style: {
+              border: "1px solid black",
+              color: "white",
+              backgroundImage:
+                "linear-gradient(to bottom right, #31c3df, #3a47d5)",
+            },
+          });
+          console.log(result);
+          router.push("/");
+        })
+        .then((error) => {
+       
+          toast.error(`Opps--${error.code}`, {
+            className: "w-[300px] h-[50px] text-xl font-bold ",
+            removeDelay: 1000,
+            iconTheme: {
+              primary: "#16061e",
+              secondary: "#ef54e2",
+            },
+            style: {
+              border: "1px solid black",
+              color: "white",
+              backgroundImage:
+                "linear-gradient(to bottom right,#0d0518,#87d0c3, #600e8c)",
+            },
+          });
+        });
+    };
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4 transition-colors duration-300">
       {/* Main Container */}
@@ -187,7 +241,7 @@ const Register = () => {
 
             {/* Updated Google Button using React Icons */}
             <div className="flex justify-center">
-              <button className="flex items-center justify-center gap-3 w-full py-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-[0.98] dark:text-white text-sm font-medium cursor-pointer">
+              <button onClick={handleGoogleLogin} className="flex items-center justify-center gap-3 w-full py-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-[0.98] dark:text-white text-sm font-medium cursor-pointer">
                 <FcGoogle size={22} /> {/* React Icon */}
                 Sign up with Google
               </button>

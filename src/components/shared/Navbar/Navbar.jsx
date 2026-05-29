@@ -2,14 +2,17 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-
-import { Bell, Menu, Moon, Search } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Bell, Menu, Moon, Search, LogOut } from "lucide-react";
 
 import CommonButton from "../commonButton/SecondaryButton";
 import MobileNavbar from "./MobileNav";
 import { ModeToggle } from "../ThemeToggle/ModeToggle";
 import PrimaryButton from "../commonButton/PrimaryButton";
 import SecondaryButton from "../commonButton/SecondaryButton";
+import useAuth from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 export const navLinks = [
   {
@@ -34,7 +37,33 @@ export const navLinks = [
   },
 ];
 const Navbar = () => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const { user, loading, logOutUser } = useAuth();
+
+  const handleLogout = async () => {
+    logOutUser().then(() => {
+      toast.success(`Log Out Successfull`, {
+        position: "top-center",
+        className: "w-[260px] h-[72px] text-sm font-semibold",
+        removeDelay: 1200,
+        iconTheme: {
+          primary: "#f87171",
+          secondary: "#fee2e2",
+        },
+        style: {
+          border: "1px solid rgba(248, 113, 113, 0.65)",
+          color: "white",
+          backgroundImage: "linear-gradient(135deg, #dc2626, #ef4444, #f87171)",
+          boxShadow:
+            "0 20px 40px rgba(220, 38, 38, 0.35), 0 0 25px rgba(248, 113, 113, 0.45)",
+        },
+      });
+    });
+  };
+
+  console.log(user, "this is user from navbar");
+  if (loading) return <h2>Loadings......</h2>;
 
   return (
     <header className="w-full border-b dark:border-b-0 dark:shadow-2xl shadow-sm border-gray-200 bg-white dark:bg-background z-999999">
@@ -73,19 +102,44 @@ const Navbar = () => {
             {/* Theme toggle */}
             <ModeToggle />
 
-            {/* LOGIN BUTTON */}
-            <div className="hidden md:flex items-center gap-4 font-inter">
-              <Link href="/auth/register">
-                <PrimaryButton className="rounded-md px-4 lg:px-6 py-2 ">
-                  Register
-                </PrimaryButton>
-              </Link>
-              <Link href="/auth/login">
-                <SecondaryButton className="rounded-md px-4 lg:px-6 py-2">
-                  Login
-                </SecondaryButton>
-              </Link>
-            </div>
+            {/* AUTH: show user photo if available, otherwise show auth buttons */}
+            {user && user.photoURL ? (
+              <div className="hidden md:flex items-center gap-3">
+                <Link
+                  href="/profile"
+                  className="flex items-center hover:opacity-80 transition-opacity duration-200"
+                >
+                  <Image
+                    src={user.photoURL}
+                    alt={user.displayName || "User"}
+                    width={40}
+                    height={40}
+                    className="w-12 h-12 rounded-full object-cover border-2 border-teal-600 hover:border-teal-700 transition-colors duration-200"
+                  />
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center justify-center gap-2 px-3 md:px-4 py-2 rounded-lg bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 font-medium text-sm md:text-base hover:bg-red-100 dark:hover:bg-red-950/60 transition-all duration-300 hover:scale-105 active:scale-95 border border-red-200 dark:border-red-800 cursor-pointer"
+                  title="Logout"
+                >
+                  <LogOut size={18} className="md:w-5 md:h-5" />
+                  <span className="hidden lg:inline">Logout</span>
+                </button>
+              </div>
+            ) : (
+              <div className="hidden md:flex items-center gap-4 font-inter">
+                <Link href="/auth/register">
+                  <PrimaryButton className="rounded-md px-4 lg:px-6 py-2 ">
+                    Register
+                  </PrimaryButton>
+                </Link>
+                <Link href="/auth/login">
+                  <SecondaryButton className="rounded-md px-4 lg:px-6 py-2">
+                    Login
+                  </SecondaryButton>
+                </Link>
+              </div>
+            )}
 
             {/* MOBILE MENU BUTTON */}
             <button

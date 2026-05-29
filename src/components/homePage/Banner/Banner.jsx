@@ -18,22 +18,20 @@ const Banner = () => {
   const slides = [
     {
       id: 1,
-      image:
-        "https://i.ibb.co.com/HTtWMcrq/Book-Illustration.png",
+      image: "https://i.ibb.co/HTtWMcrq/Book-Illustration.png",
     },
     {
       id: 2,
-      image:
-        "https://i.ibb.co.com/mr3h67dT/libray.png",
+      image: "https://i.ibb.co/mr3h67dT/libray.png",
     },
     {
       id: 3,
       image:
-        "https://i.ibb.co.com/WpjthzC4/Gemini-Generated-Image-u1vl4vu1vl4vu1vl.png",
-    },{
+        "https://i.ibb.co/WpjthzC4/Gemini-Generated-Image-u1vl4vu1vl4vu1vl.png",
+    },
+    {
       id: 4,
-      image:
-        "https://i.ibb.co.com/CfWWkP9/imgsd.png",
+      image: "https://i.ibb.co/CfWWkP9/imgsd.png",
     },
   ];
 
@@ -44,8 +42,8 @@ const Banner = () => {
         <div className="space-y-6 ">
           <div className="flex justify-center lg:justify-start">
             <span className="lg:inline-block px-4 py-1 rounded-full bg-[#E2E8F0] text-[#006D5B] text-sm font-semibold font-inter text-center mx-auto lg:mx-0">
-            Library Management 2.0
-          </span>
+              Library Management 2.0
+            </span>
           </div>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-[#0F172A] dark:text-text-primary lg:leading-tight font-montserrat text-center lg:text-left">
             Your Gateway to <br />
@@ -56,10 +54,14 @@ const Banner = () => {
             institutional resources through our precision-engineered platform.
           </p>
           <div className="flex justify-center lg:justify-start gap-4 pt-4">
-          
-            <PrimaryButton className="rounded-md px-4 lg:px-6 xl:px-8 py-1 lg:py-2 text-sm md:text-xl lg:text-2xl"> Explore Library </PrimaryButton>
-           
-            <SecondaryButton className="rounded-md px-4 lg:px-6  py-2 text-sm md:text-xl lg:text-2xl">Quick Tour</SecondaryButton>
+            <PrimaryButton className="rounded-md px-4 lg:px-6 xl:px-8 py-1 lg:py-2 text-sm md:text-xl lg:text-2xl">
+              {" "}
+              Explore Library{" "}
+            </PrimaryButton>
+
+            <SecondaryButton className="rounded-md px-4 lg:px-6  py-2 text-sm md:text-xl lg:text-2xl">
+              Quick Tour
+            </SecondaryButton>
           </div>
         </div>
 

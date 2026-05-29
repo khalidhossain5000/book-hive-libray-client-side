@@ -1,10 +1,111 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import loginImg from "../../../assets/AuthBg/auth-pagesbds.png";
 import { FcGoogle } from "react-icons/fc";
+import useAuth from "@/hooks/useAuth";
 
 const Login = () => {
+  const router = useRouter();
+  const [wrongPassword, setWrongPassword] = useState("");
+  const { logInUser, handleGoogleUser, loading } = useAuth();
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const { email, password } = Object.fromEntries(formData.entries());
+    setWrongPassword("");
+    // FIREBASE USER
+    logInUser(email, password)
+      .then((result) => {
+        toast.success(`Logged in successfully`, {
+          position: "top-center",
+          className: "w-[260px] h-[72px] text-sm font-semibold",
+          removeDelay: 1200,
+          iconTheme: {
+            primary: "#dc2626",
+            secondary: "#fecaca",
+          },
+          style: {
+            border: "1px solid rgba(220, 38, 38, 0.65)",
+            color: "white",
+            backgroundImage: "linear-gradient(135deg, #991b1b, #ef4444)",
+            boxShadow:
+              "0 16px 30px rgba(220, 38, 38, 0.25), 0 0 18px rgba(248, 113, 113, 0.35)",
+          },
+        });
+        console.log(result);
+        router.push("/");
+      })
+      .catch((error) => {
+        const message =
+          error.code === "auth/wrong-password"
+            ? "Wrong password. Please check and try again."
+            : "Invalid email or password.";
+        setWrongPassword(message);
+        toast.error(message, {
+          position: "top-center",
+          className: "w-[260px] h-[72px] text-sm font-semibold",
+          removeDelay: 1800,
+          iconTheme: {
+            primary: "#b91c1c",
+            secondary: "#fee2e2",
+          },
+          style: {
+            border: "1px solid rgba(220, 38, 38, 0.75)",
+            color: "white",
+            backgroundImage: "linear-gradient(135deg, #7f1d1d, #dc2626)",
+            boxShadow:
+              "0 16px 30px rgba(220, 38, 38, 0.3), 0 0 18px rgba(220, 38, 38, 0.4)",
+          },
+        });
+      });
+  };
+
+  //google login
+
+  const handleGoogleLogin = () => {
+    handleGoogleUser()
+      .then((result) => {
+        toast.success("Google Logged In Successfull", {
+          className: "w-[300px] h-[50px] text-xl font-bold",
+          removeDelay: 1000,
+          position: "top-left",
+          iconTheme: {
+            primary: "#16061e",
+            secondary: "#ef54e2",
+          },
+          style: {
+            border: "1px solid black",
+            color: "white",
+            backgroundImage:
+              "linear-gradient(to bottom right, #31c3df, #3a47d5)",
+          },
+        });
+        console.log(result);
+        router.push("/");
+      })
+      .then((error) => {
+     
+        toast.error(`Opps--${error.code}`, {
+          className: "w-[300px] h-[50px] text-xl font-bold ",
+          removeDelay: 1000,
+          iconTheme: {
+            primary: "#16061e",
+            secondary: "#ef54e2",
+          },
+          style: {
+            border: "1px solid black",
+            color: "white",
+            backgroundImage:
+              "linear-gradient(to bottom right,#0d0518,#87d0c3, #600e8c)",
+          },
+        });
+      });
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4 transition-colors duration-300">
       {/* Main Container */}
@@ -44,7 +145,7 @@ const Login = () => {
               Access your dashboard and manage your library books.
             </p>
 
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={handleLogin}>
               {/* Email Field */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
@@ -52,6 +153,7 @@ const Login = () => {
                 </label>
                 <input
                   type="email"
+                  name="email"
                   placeholder="admin@bookihive.com"
                   className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-teal-500 outline-none transition-all dark:text-white cursor-text"
                 />
@@ -72,14 +174,24 @@ const Login = () => {
                 </div>
                 <input
                   type="password"
+                  name="password"
                   placeholder="••••••••"
                   className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-teal-500 outline-none transition-all dark:text-white cursor-text"
                 />
+                {wrongPassword && (
+                  <p className="mt-2 text-sm text-red-600 dark:text-red-300">
+                    {wrongPassword}
+                  </p>
+                )}
               </div>
 
               {/* Sign In Button */}
-              <button className="w-full py-3 bg-teal-800 hover:bg-teal-700 text-white font-bold rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-teal-900/20 mt-2 cursor-pointer">
-                Sign In
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full py-3 ${loading ? "bg-slate-400 cursor-not-allowed" : "bg-teal-800 hover:bg-teal-700"} text-white font-bold rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-teal-900/20 mt-2`}
+              >
+                {loading ? "Signing In..." : "Sign In"}
               </button>
             </form>
 
@@ -93,7 +205,10 @@ const Login = () => {
 
             {/* Social Buttons - Only Google */}
             <div className="flex justify-center">
-              <button className="flex items-center justify-center gap-3 w-full py-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-[0.98] dark:text-white text-sm font-medium cursor-pointer">
+              <button
+                onClick={handleGoogleLogin}
+                className="flex items-center justify-center gap-3 w-full py-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-[0.98] dark:text-white text-sm font-medium cursor-pointer"
+              >
                 <FcGoogle size={22} />
                 Sign in with Google
               </button>
