@@ -14,6 +14,10 @@ import {
   LogOut
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import useRole from "@/hooks/useRole";
+import GlobalLoading from "../shared/GlobalLoading";
+import useAuth from "@/hooks/useAuth";
+import Image from "next/image";
 
 const demoRoutes = [
   {
@@ -39,6 +43,10 @@ export function DashboardShell({ children }) {
 
   const closeSidebar = () => setIsSidebarOpen(false);
 
+  const {role,roleLoading}=useRole()
+  const {user,logout,loading}=useAuth()
+  console.log(role,roleLoading,'this is role and role loading',user)
+  if(roleLoading || loading) return <GlobalLoading/>
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       {/* Mobile Sidebar Overlay */}
@@ -148,7 +156,7 @@ export function DashboardShell({ children }) {
             {/* Page Title (Desktop) */}
             <div className="hidden lg:flex flex-col">
               <h1 className="text-xl font-bold font-montserrat text-foreground">
-                Dashboard
+               {role?.toUpperCase()} Dashboard
               </h1>
               <p className="text-xs text-foreground/50 font-inter mt-0.5">
                 Manage your library effectively
@@ -158,9 +166,13 @@ export function DashboardShell({ children }) {
           
           <div className="flex items-center gap-5">
             <ModeToggle />
-            <div className="h-9 w-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold shadow-sm cursor-pointer hover:bg-primary/20 transition-colors">
-              U
-            </div>
+           <Image
+                               src={user?.photoURL}
+                               alt={user?.displayName || "User"}
+                               width={40}
+                               height={40}
+                               className="w-12 h-12 rounded-full object-cover border-2 border-teal-600 hover:border-teal-700 transition-colors duration-200"
+                             />
           </div>
         </header>
 

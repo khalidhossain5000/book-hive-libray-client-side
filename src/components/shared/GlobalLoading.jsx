@@ -1,52 +1,50 @@
 "use client";
 
 import React from "react";
+import { BookOpen, Loader2 } from "lucide-react";
 
 export default function GlobalLoading({
   fullScreen = true,
   message = "Loading...",
-  size = 48,
   className = "",
 }) {
-  const spinner = (
-    <svg
-      role="status"
-      className="animate-spin text-white"
-      style={{ width: size, height: size }}
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-        fill="none"
-      />
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-      />
-    </svg>
-  );
-
   const content = (
-    <div className={`flex flex-col items-center gap-3 ${className}`}>
-      <div className="p-2 rounded-full bg-black/60">{spinner}</div>
-      {message && <div className="text-sm text-slate-100">{message}</div>}
+    <div className={`flex flex-col items-center justify-center gap-5 ${className}`}>
+      <div className="relative flex items-center justify-center">
+        {/* Outer glowing ring for premium effect */}
+        <div className="absolute inset-0 rounded-full blur-xl bg-primary/40 animate-pulse" />
+        
+        {/* Main Spinner Container */}
+        <div className="relative bg-background border border-primary/20 shadow-xl shadow-primary/10 rounded-full p-4 flex items-center justify-center">
+          <Loader2 className="w-10 h-10 text-primary animate-spin absolute" />
+          <BookOpen className="w-4 h-4 text-primary/80 animate-pulse" />
+        </div>
+      </div>
+      
+      {message && (
+        <div className="flex flex-col items-center gap-1.5">
+          <h3 className="text-sm font-bold text-foreground font-montserrat tracking-widest uppercase">
+            BookHive
+          </h3>
+          <p className="text-xs text-foreground/50 font-inter font-medium tracking-wide animate-pulse">
+            {message}
+          </p>
+        </div>
+      )}
     </div>
   );
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-md">
         {content}
       </div>
     );
   }
 
-  return content;
+  return (
+    <div className="w-full h-full min-h-[300px] flex items-center justify-center">
+      {content}
+    </div>
+  );
 }

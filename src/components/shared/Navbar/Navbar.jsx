@@ -106,7 +106,7 @@ const Navbar = () => {
             {user && user.photoURL ? (
               <div className="hidden md:flex items-center gap-3">
                 <Link
-                  href="/profile"
+                  href="/dashboard"
                   className="flex items-center hover:opacity-80 transition-opacity duration-200"
                 >
                   <Image
