@@ -12,7 +12,8 @@ import {
   Menu, 
   X, 
   BookOpen,
-  LogOut
+  LogOut,
+  BookOpenText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import useRole from "@/hooks/useRole";
@@ -37,6 +38,11 @@ const demoRoutes = [
     title: "Add Book",
     href: "/dashboard/add-book",
     icon: BookOpen,
+  },
+  {
+    title: "Manage Books",
+    href: "/dashboard/manage-books",
+    icon: BookOpenText,
   }
 ];
 
@@ -83,7 +89,6 @@ export function DashboardShell({ children }) {
           onClick={closeSidebar}
         />
       )}
-
       {/* Sidebar */}
       <aside
         className={`fixed flex flex-col inset-y-0 left-0 z-50 w-64 transform border-r border-slate-200 dark:border-slate-700 bg-background transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${

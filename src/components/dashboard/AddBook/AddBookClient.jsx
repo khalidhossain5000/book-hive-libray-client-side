@@ -21,6 +21,8 @@ import { imageUpload } from "@/lib/imageupload/imageUpload";
 
 const categories = [
   "Novel",
+  "Sports & Games",
+  "Computer & Coding",
   "Sci-Fi",
   "History",
   "Biography",
