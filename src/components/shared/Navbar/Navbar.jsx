@@ -23,7 +23,7 @@ export const navLinks = [
   {
     id: 2,
     name: "All Books",
-    path: "/books",
+    path: "/all-books",
   },
   {
     id: 3,
