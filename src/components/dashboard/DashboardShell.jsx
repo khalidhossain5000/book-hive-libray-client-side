@@ -43,6 +43,11 @@ const demoRoutes = [
     title: "Manage Books",
     href: "/dashboard/manage-books",
     icon: BookOpenText,
+  },
+  {
+    title:"My Borrowed Books",
+    href:"/dashboard/borrowed-books",
+    icon:BookOpenText
   }
 ];
 

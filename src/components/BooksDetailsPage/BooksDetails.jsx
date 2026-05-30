@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -12,13 +12,12 @@ import {
   Bookmark,
   Share2,
   ArrowLeft,
-  CheckCircle2,
-  Loader2,
-  Users,
   Hash,
   BookMarked,
 } from "lucide-react";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
+import useAuth from "@/hooks/useAuth";
+import BorrowBookModal from "@/components/BooksDetailsPage/BorrowBookModal";
 
 // ─── Star Rating ───────────────────────────────────────────────────────────────
 const StarRating = ({ rating }) => {
@@ -68,12 +67,18 @@ const Skeleton = () => (
         <div className="mt-6 h-px bg-slate-200 dark:bg-slate-800" />
         <div className="space-y-2 pt-2">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-3 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
+            <div
+              key={i}
+              className="h-3 w-full rounded-full bg-slate-200 dark:bg-slate-800"
+            />
           ))}
         </div>
         <div className="mt-6 grid grid-cols-4 gap-3">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-20 rounded-2xl bg-slate-200 dark:bg-slate-800" />
+            <div
+              key={i}
+              className="h-20 rounded-2xl bg-slate-200 dark:bg-slate-800"
+            />
           ))}
         </div>
       </div>
@@ -86,12 +91,15 @@ const BooksDetails = () => {
   const { id } = useParams();
   const router = useRouter();
   const axiosSecure = useAxiosSecure();
+  const { user } = useAuth();
+  const [isBorrowOpen, setIsBorrowOpen] = useState(false);
 
   const {
     data: book,
     isLoading,
     isError,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["book", id],
     queryFn: async () => {
@@ -130,10 +138,12 @@ const BooksDetails = () => {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0d1117]">
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-10">
-
         {/* ── Breadcrumb ── */}
         <nav className="mb-8 flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500">
-          <Link href="/" className="hover:text-teal-600 dark:hover:text-teal-400 transition-colors">
+          <Link
+            href="/"
+            className="hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
+          >
             Catalog
           </Link>
           <ChevronRight size={12} />
@@ -151,7 +161,6 @@ const BooksDetails = () => {
 
         {/* ── Hero Grid ── */}
         <div className="grid gap-10 lg:grid-cols-[360px_1fr] xl:gap-16">
-
           {/* Left — Book Cover */}
           <div className="flex justify-center lg:justify-start">
             <div className="relative w-full max-w-[340px]">
@@ -186,7 +195,6 @@ const BooksDetails = () => {
 
           {/* Right — Details */}
           <div className="flex flex-col justify-center">
-
             {/* Tags row */}
             <div className="mb-4 flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-700 dark:border-teal-800/60 dark:bg-teal-950/50 dark:text-teal-300">
@@ -234,7 +242,9 @@ const BooksDetails = () => {
                 Summary
               </h2>
               <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                {book.content || book.shortDescription || "No description available."}
+                {book.content ||
+                  book.shortDescription ||
+                  "No description available."}
               </p>
             </div>
 
@@ -242,14 +252,21 @@ const BooksDetails = () => {
             <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
               <StatCard label="Copies" value={book.quantity ?? 0} />
               <StatCard label="Category" value={book.category || "—"} />
-              <StatCard label="Rating" value={`${parseFloat(book.rating || 0).toFixed(1)} / 5`} />
-              <StatCard label="Status" value={isAvailable ? "In Stock" : "Out"} />
+              <StatCard
+                label="Rating"
+                value={`${parseFloat(book.rating || 0).toFixed(1)} / 5`}
+              />
+              <StatCard
+                label="Status"
+                value={isAvailable ? "In Stock" : "Out"}
+              />
             </div>
 
             {/* Action buttons */}
             <div className="flex flex-wrap items-center gap-3">
               <button
-                disabled={!isAvailable}
+                disabled={!isAvailable || !user}
+                onClick={() => setIsBorrowOpen(true)}
                 className="inline-flex items-center gap-2 rounded-2xl bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition hover:bg-teal-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <BookMarked size={16} />
@@ -289,6 +306,16 @@ const BooksDetails = () => {
           </button>
         </div>
       </div>
+      <BorrowBookModal
+        open={isBorrowOpen}
+        book={book}
+        user={user}
+        onClose={() => setIsBorrowOpen(false)}
+        onSuccess={() => {
+          setIsBorrowOpen(false);
+          refetch();
+        }}
+      />
     </div>
   );
 };
