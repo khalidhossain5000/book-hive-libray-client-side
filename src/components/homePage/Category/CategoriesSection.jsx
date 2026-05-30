@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 import compImg from "@/assets/HomeCategorieImg/com&programming.jpg";
 import scifiImg from "@/assets/HomeCategorieImg/science-fictions.jpg";
 import sportsImg from "@/assets/HomeCategorieImg/sports&games.jpg";
-import selfdevImg from "@/assets/HomeCategorieImg/Self-Development & Meditation.jpg";
+import mysteryImg from "../../../assets/HomeCategorieImg/mystery.png";
 
 const CategoriesSection = () => {
   const categories = [
@@ -27,9 +27,9 @@ const CategoriesSection = () => {
       des: 'From football to cricket, indoor games to eSports—news, tips, and tricks.'
     },
     { 
-      name: "Self-Development", 
-      image: selfdevImg, 
-      des: 'Inspiration and meditation techniques to improve yourself and find mental peace.' 
+      name: "Mystery", 
+      image: mysteryImg, 
+      des: 'Mysterious plots and suspenseful tales to keep you guessing until the end.' 
     },
   ];
 
@@ -86,7 +86,7 @@ const CategoriesSection = () => {
                   href={`/book-categories/${cat.name.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`}
                   className="inline-flex items-center text-sm font-semibold text-slate-900 dark:text-slate-100 border-b-2 border-teal-500/0 hover:border-teal-500 pb-1 transition-all duration-200"
                 >
-                  Explore Books
+                  Explore {cat.name} Books
                 </Link>
               </div>
             </div>

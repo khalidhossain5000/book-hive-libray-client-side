@@ -21,7 +21,10 @@ const steps = [
 
 const Flow = () => {
   return (
-    <section className="bg-[#e8edf5] dark:bg-slate-900 py-16">
+    <section
+      id="borrowing-flow"
+      className="scroll-mt-24 bg-[#e8edf5] dark:bg-slate-900 py-16"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* Header */}

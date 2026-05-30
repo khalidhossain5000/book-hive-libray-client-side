@@ -12,6 +12,7 @@ import "swiper/css/autoplay";
 import { Pagination, Autoplay } from "swiper/modules";
 import PrimaryButton from "@/components/shared/commonButton/PrimaryButton";
 import SecondaryButton from "@/components/shared/commonButton/SecondaryButton";
+import Link from "next/link";
 
 const Banner = () => {
   // Dummy images for the carousel
@@ -54,14 +55,18 @@ const Banner = () => {
             institutional resources through our precision-engineered platform.
           </p>
           <div className="flex justify-center lg:justify-start gap-4 pt-4">
-            <PrimaryButton className="rounded-md px-4 lg:px-6 xl:px-8 py-1 lg:py-2 text-sm md:text-xl lg:text-2xl">
-              {" "}
-              Explore Library{" "}
-            </PrimaryButton>
+            <Link href="/all-books">
+              <PrimaryButton className="rounded-md px-4 lg:px-6 xl:px-8 py-1 lg:py-2 text-sm md:text-xl lg:text-2xl">
+                {" "}
+                Explore Books{" "}
+              </PrimaryButton>
+            </Link>
 
-            <SecondaryButton className="rounded-md px-4 lg:px-6  py-2 text-sm md:text-xl lg:text-2xl">
-              Quick Tour
-            </SecondaryButton>
+            <Link href="#borrowing-flow">
+              <SecondaryButton className="rounded-md px-4 lg:px-6  py-2 text-sm md:text-xl lg:text-2xl">
+                Quick Tour
+              </SecondaryButton>
+            </Link>
           </div>
         </div>
 

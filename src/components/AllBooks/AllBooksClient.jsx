@@ -3,7 +3,6 @@
 import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import {
   Search,
   Star,
@@ -48,12 +47,11 @@ const StarRating = ({ rating }) => {
   );
 };
 
-const AllBooksClient = () => {
+const AllBooksClient = ({ initialCategory = "All" }) => {
   const axiosInstance = useAxios();
   const [searchText, setSearchText] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const router = useRouter();
 
   const {
     data: books = [],

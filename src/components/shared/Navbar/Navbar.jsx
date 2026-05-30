@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Bell, Menu, Moon, Search, LogOut } from "lucide-react";
+import { Bell, Menu, Moon, Search, LogOut, Heart } from "lucide-react";
 
 import CommonButton from "../commonButton/SecondaryButton";
 import MobileNavbar from "./MobileNav";
@@ -67,7 +67,7 @@ const Navbar = () => {
     });
   };
 
-  if (loading) return <h2>Loadings......</h2>;
+
 
   return (
     <header className="w-full border-b dark:border-b-0 dark:shadow-2xl shadow-sm border-gray-200 bg-white dark:bg-background z-999999">
@@ -102,9 +102,22 @@ const Navbar = () => {
             ))}
           </div>
           {/* RIGHT SIDE */}
-          <div className="flex items-center gap-3 relative z-[999999999999999999999999]">
+          <div className="flex items-center gap-2 relative z-[999999999999999999999999]">
             {/* Theme toggle */}
             <ModeToggle />
+
+            {/* Wishlist icon (private per-user later) */}
+            <Link
+              href="/wishlist"
+              className="hidden md:flex items-center justify-center w-11 h-11 rounded-full hover:bg-gray-100 transition"
+              title="Wishlist"
+              aria-label="Wishlist"
+            >
+              <Heart
+                size={20}
+                className="text-gray-600 dark:text-text-primary"
+              />
+            </Link>
 
             {/* AUTH: show user info and logout when signed in, otherwise show auth buttons */}
             {user ? (

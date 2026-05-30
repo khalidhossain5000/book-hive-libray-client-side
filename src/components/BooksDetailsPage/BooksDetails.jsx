@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -14,7 +14,9 @@ import {
   ArrowLeft,
   Hash,
   BookMarked,
+  Heart,
 } from "lucide-react";
+import { toast } from "sonner";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import useAuth from "@/hooks/useAuth";
 import BorrowBookModal from "@/components/BooksDetailsPage/BorrowBookModal";
@@ -93,6 +95,8 @@ const BooksDetails = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const [isBorrowOpen, setIsBorrowOpen] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isWishlistLoading, setIsWishlistLoading] = useState(false);
 
   const {
     data: book,
@@ -109,6 +113,85 @@ const BooksDetails = () => {
     enabled: !!id,
     staleTime: 1000 * 60 * 5,
   });
+
+  useEffect(() => {
+    const checkWishlist = async () => {
+      if (!user?.email || !axiosSecure) return;
+      const bookId = book?._id || book?.id || id;
+      if (!bookId) return;
+
+      try {
+        const { data } = await axiosSecure.get("/wishlist/check", {
+          params: {
+            bookId,
+            email: user.email,
+          },
+        });
+
+        if (data?.success && data?.isWishlisted) {
+          setIsWishlisted(true);
+        }
+      } catch (error) {
+        // silent fallback if wishlist status cannot be verified
+      }
+    };
+
+    checkWishlist();
+  }, [axiosSecure, book, id, user?.email]);
+
+  const handleAddToWishlist = async () => {
+    if (!user?.email) {
+      return toast.error("Please login to add to wishlist", {
+        position: "top-center",
+      });
+    }
+
+    if (!axiosSecure || typeof axiosSecure.post !== "function") {
+      return toast.error("Unable to add wishlist at this time", {
+        position: "top-center",
+      });
+    }
+
+    try {
+      setIsWishlistLoading(true);
+
+      const payload = {
+        bookId: book?._id || book?.id || id,
+        userEmail: user?.email,
+        title: book?.title,
+        image: book?.image,
+        author: book?.author,
+        category: book?.category,
+      };
+
+      const { data } = await axiosSecure.post("/wishlist", payload);
+
+      if (data?.success) {
+        setIsWishlisted(true);
+        toast.success(data?.message || "Book added to wishlist", {
+          position: "top-center",
+        });
+      } else {
+        if (data?.message?.toLowerCase().includes("already")) {
+          setIsWishlisted(true);
+        }
+        toast.error(data?.message || "Unable to add to wishlist", {
+          position: "top-center",
+        });
+      }
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Unable to add to wishlist";
+      if (message.toLowerCase().includes("already")) {
+        setIsWishlisted(true);
+      }
+      toast.error(message, { position: "top-center" });
+    } finally {
+      setIsWishlistLoading(false);
+    }
+  };
 
   if (isLoading) return <Skeleton />;
 
@@ -272,11 +355,21 @@ const BooksDetails = () => {
                 <BookMarked size={16} />
                 Borrow Book
               </button>
-              <button className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-teal-400 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 dark:hover:border-teal-600">
-                <Bookmark size={16} />
-                Save for Later
+              <button
+                disabled={isWishlistLoading || isWishlisted}
+                onClick={handleAddToWishlist}
+                className={`inline-flex items-center gap-2 rounded-2xl border px-6 py-3 text-sm font-semibold shadow-sm transition ${isWishlisted ? "border-red-200 bg-red-50 text-red-600 dark:border-red-700/60 dark:bg-red-950/40 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-950/60 cursor-not-allowed" : "border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200 hover:border-teal-400 dark:hover:border-teal-600 cursor-pointer"}`}
+                title={isWishlisted ? "Added to wishlist" : "Add to wishlist"}
+                aria-pressed={isWishlisted}
+              >
+                <Heart
+                  size={20}
+                  fill="currentColor"
+                  className={`${isWishlisted ? "text-red-500" : "text-gray-600 dark:text-text-primary"}`}
+                />
+                {isWishlisted ? "Wishlisted" : "Add To Wishlist"}
               </button>
-              <button className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:border-teal-400 hover:text-teal-600 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-400 dark:hover:border-teal-600 dark:hover:text-teal-400">
+              <button className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:border-teal-400 hover:text-teal-600 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-400 dark:hover:border-teal-600 dark:hover:text-teal-400 cursor-pointer">
                 <Share2 size={16} />
               </button>
             </div>

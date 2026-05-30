@@ -136,7 +136,7 @@ const PopularBooks = () => {
                     <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
                       {book.author || "Unknown Author"}
                     </p>
-                    <Link href={`/books/${book._id}`}>
+                    <Link href={`/all-books/${book._id}`}>
                     <button
                       
                       className="w-full rounded-xl border border-slate-300 bg-transparent py-2.5 text-xs font-semibold text-slate-700 transition hover:border-teal-500 hover:text-teal-700 dark:border-slate-700 dark:text-slate-200 dark:hover:border-teal-500 dark:hover:text-teal-400 cursor-pointer"
