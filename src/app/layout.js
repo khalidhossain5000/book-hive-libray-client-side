@@ -27,16 +27,18 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
       className={` ${montserrat.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-                  <Toaster/>
-
+          <div className="flex min-h-full flex-col">
+            <main className="flex-1">{children}</main>
+  
+          </div>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
