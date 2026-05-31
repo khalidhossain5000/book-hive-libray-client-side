@@ -26,12 +26,22 @@ export const navLinks = [
   },
   {
     id: 3,
+    name: "About",
+    path: "/about",
+  },
+  {
+    id: 4,
     name: "Borrowed Books",
     path: "/borrowed-books",
     private: true,
   },
   {
-    id: 4,
+    id: 5,
+    name: "Contact",
+    path: "/contact",
+  },
+  {
+    id: 6,
     name: "Dashboard",
     path: "/dashboard",
     private: true,
