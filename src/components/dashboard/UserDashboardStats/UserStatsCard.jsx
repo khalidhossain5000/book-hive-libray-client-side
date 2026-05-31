@@ -21,14 +21,14 @@ const statItems = [
       "from-sky-500/18 via-white to-white dark:from-sky-400/15 dark:via-slate-900 dark:to-slate-900",
     iconClass: "bg-sky-100 text-sky-700 dark:bg-sky-400/15 dark:text-sky-300",
   },
-  {
-    key: "returnedBooks",
-    title: "Returned Books",
-    icon: RotateCcw,
-    className:
-      "from-emerald-500/18 via-white to-white dark:from-emerald-400/15 dark:via-slate-900 dark:to-slate-900",
-    iconClass: "bg-emerald-100 text-emerald-700 dark:bg-emerald-400/15 dark:text-emerald-300",
-  },
+  // {
+  //   key: "returnedBooks",
+  //   title: "Returned Books",
+  //   icon: RotateCcw,
+  //   className:
+  //     "from-emerald-500/18 via-white to-white dark:from-emerald-400/15 dark:via-slate-900 dark:to-slate-900",
+  //   iconClass: "bg-emerald-100 text-emerald-700 dark:bg-emerald-400/15 dark:text-emerald-300",
+  // },
   {
     key: "wishlistItems",
     title: "Wishlist Items",
@@ -41,7 +41,7 @@ const statItems = [
 
 const UserStatsCard = ({ stats = {} }) => {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {statItems.map((item) => {
         const Icon = item.icon;
         const value = Number(stats?.[item.key] || 0);

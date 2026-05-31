@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ModeToggle } from "@/components/shared/ThemeToggle/ModeToggle";
@@ -23,33 +23,46 @@ import Image from "next/image";
 import { toast } from "sonner";
 
 
-const demoRoutes = [
+const dashboardRoutes = [
   {
     title: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
+    roles: ["admin", "user"],
   },
   {
     title: "Manage Users",
     href: "/dashboard/manage-users",
     icon: Users,
+    roles: ["admin"],
   },
   {
     title: "Add Book",
     href: "/dashboard/add-book",
     icon: BookOpen,
+    roles: ["admin"],
   },
   {
     title: "Manage Books",
     href: "/dashboard/manage-books",
     icon: BookOpenText,
+    roles: ["admin"],
   },
   {
     title:"My Borrowed Books",
     href:"/dashboard/borrowed-books",
-    icon:BookOpenText
+    icon:BookOpenText,
+    roles: ["user"],
   }
 ];
+
+const adminOnlyPaths = dashboardRoutes
+  .filter((route) => route.roles.includes("admin") && !route.roles.includes("user"))
+  .map((route) => route.href);
+
+const userOnlyPaths = dashboardRoutes
+  .filter((route) => route.roles.includes("user") && !route.roles.includes("admin"))
+  .map((route) => route.href);
 
 export function DashboardShell({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -60,7 +73,27 @@ export function DashboardShell({ children }) {
   const {role,roleLoading}=useRole()
   const {user,logOutUser,loading}=useAuth()
   const router=useRouter()
-  console.log(role,roleLoading,'this is role and role loading',user)
+  const isAdmin = role === "admin";
+  const visibleRoutes = useMemo(
+    () => dashboardRoutes.filter((route) => route.roles.includes(isAdmin ? "admin" : "user")),
+    [isAdmin],
+  );
+
+  useEffect(() => {
+    if (roleLoading || loading) return;
+
+    const isAdminOnlyRoute = adminOnlyPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+    const isUserOnlyRoute = userOnlyPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+
+    if (!isAdmin && isAdminOnlyRoute) {
+      router.replace("/dashboard");
+    }
+
+    if (isAdmin && isUserOnlyRoute) {
+      router.replace("/dashboard");
+    }
+  }, [isAdmin, loading, pathname, roleLoading, router]);
+
   if(roleLoading || loading) return <GlobalLoading/>
 
 
@@ -119,7 +152,7 @@ export function DashboardShell({ children }) {
           <p className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-foreground/40 font-inter">
             Main Menu
           </p>
-          {demoRoutes.map((route) => {
+          {visibleRoutes.map((route) => {
             const isActive = pathname === route.href;
             const Icon = route.icon;
             
@@ -150,12 +183,12 @@ export function DashboardShell({ children }) {
             href="/dashboard/profile-setting"
             onClick={closeSidebar}
             className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-inter font-medium transition-colors ${
-              pathname === "/dashboard/settings"
+              pathname === "/dashboard/profile-setting"
                 ? "bg-primary/10 text-primary"
                 : "text-foreground/70 hover:text-foreground hover:bg-muted/50"
             }`}
           >
-            <Settings className={`h-5 w-5 ${pathname === "/dashboard/profile-settings" ? "text-primary" : "text-foreground/50"}`} />
+            <Settings className={`h-5 w-5 ${pathname === "/dashboard/profile-setting" ? "text-primary" : "text-foreground/50"}`} />
             Settings
           </Link>
           <button
@@ -196,20 +229,26 @@ export function DashboardShell({ children }) {
                {role?.toUpperCase()} Dashboard
               </h1>
               <p className="text-xs text-foreground/50 font-inter mt-0.5">
-                Manage your library effectively
+                {isAdmin ? "Manage your library effectively" : "Track your reading activity"}
               </p>
             </div>
           </div>
           
           <div className="flex items-center gap-5">
             <ModeToggle />
-           <Image
-                               src={user?.photoURL}
-                               alt={user?.displayName || "User"}
-                               width={40}
-                               height={40}
-                               className="w-12 h-12 rounded-full object-cover border-2 border-teal-600 hover:border-teal-700 transition-colors duration-200"
-                             />
+            {user?.photoURL ? (
+              <Image
+                src={user.photoURL}
+                alt={user?.displayName || "User"}
+                width={40}
+                height={40}
+                className="w-12 h-12 rounded-full object-cover border-2 border-teal-600 hover:border-teal-700 transition-colors duration-200"
+              />
+            ) : (
+              <div className="w-12 h-12 rounded-full bg-teal-600 text-white flex items-center justify-center font-semibold text-lg border-2 border-teal-700">
+                {user?.displayName?.charAt(0).toUpperCase() || "U"}
+              </div>
+            )}
           </div>
         </header>
 

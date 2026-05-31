@@ -3,9 +3,10 @@ import axios from "axios";
 import React from "react";
 import useAuth from "./useAuth";
 import GlobalLoading from "@/components/shared/GlobalLoading";
+
 const axiosSecure = axios.create({
-  // baseURL: `http://localhost:5000`,
-   baseURL: `process.env.PRODUCTION_URL`
+  baseURL: `http://localhost:5000`,
+  //  baseURL: `process.env.PRODUCTION_URL`
 });
 const useAxiosSecure = () => {
   const { user, logOut } = useAuth();

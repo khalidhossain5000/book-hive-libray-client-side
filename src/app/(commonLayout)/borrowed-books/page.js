@@ -3,7 +3,7 @@ import PrivateRoute from "@/components/PrivateRoute/PrivateRoute";
 
 const BorrowedBooksPage = () => {
   return (
-    <PrivateRoute>
+    <PrivateRoute allowedRoles={["admin","user"]}>
       <BorrowedBooks />
     </PrivateRoute>
   );

@@ -29,7 +29,7 @@ const UserBorrowedBooks = () => {
     enabled: !!user?.email,
     staleTime: 1000 * 60 * 3,
   });
-
+console.log(borrowedBooks,'data here')
   const returnBookMutation = useMutation({
     mutationFn: async ({ borrowedRecordId, bookId }) => {
       await axiosSecure.patch(`/all-books/quantity/${bookId}`);
@@ -133,6 +133,7 @@ const UserBorrowedBooks = () => {
               const title = item.bookTitle || item.title || "Untitled";
               const author = item.bookAuthor || item.author || "Unknown author";
               const status = item.status || "Borrowed";
+              const image = item.bookImage || item.imageUrl || item.image;
               return (
                 <tr
                   key={item._id || item.bookId || title}
@@ -141,9 +142,9 @@ const UserBorrowedBooks = () => {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
-                        {item.bookImage ? (
+                        {image ? (
                           <Image
-                            src={item.bookImage}
+                            src={image}
                             alt={title}
                             fill
                             className="object-cover"
@@ -181,7 +182,7 @@ const UserBorrowedBooks = () => {
                   <td className="px-6 py-4 text-right">
                     <button
                       onClick={() => handleReturnConfirm(item)}
-                      disabled={returnBookMutation.isLoading}
+                      disabled={returnBookMutation.isPending}
                       className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-xs font-semibold text-red-700 hover:bg-red-100 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-300 dark:hover:bg-red-900/40 transition disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Return
@@ -209,6 +210,7 @@ const UserBorrowedBooks = () => {
           const title = item.bookTitle || item.title || "Untitled";
           const author = item.bookAuthor || item.author || "Unknown author";
           const status = item.status || "Borrowed";
+          const image = item.bookImage || item.imageUrl || item.image;
           return (
             <div
               key={item._id || item.bookId || title}
@@ -217,9 +219,9 @@ const UserBorrowedBooks = () => {
               <div className="p-4 sm:p-5">
                 <div className="flex items-start gap-4">
                   <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
-                    {item.bookImage ? (
+                    {image ? (
                       <Image
-                        src={item.bookImage}
+                        src={image}
                         alt={title}
                         fill
                         className="object-cover"
@@ -258,10 +260,10 @@ const UserBorrowedBooks = () => {
               <div className="border-t border-slate-100 dark:border-slate-800 p-4">
                 <button
                   onClick={() => handleReturnConfirm(item)}
-                  disabled={returnBookMutation.isLoading}
+                  disabled={returnBookMutation.isPending}
                   className="w-full rounded-2xl bg-red-600 px-4 py-3 text-sm font-semibold text-white hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {returnBookMutation.isLoading ? "Returning..." : "Return"}
+                  {returnBookMutation.isPending ? "Returning..." : "Return"}
                 </button>
               </div>
             </div>

@@ -2,27 +2,27 @@
 
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import useAuth from "@/hooks/useAuth";
 import GlobalLoading from "@/components/shared/GlobalLoading";
+import useRole from "@/hooks/useRole";
 
 const PrivateRoute = ({ children, allowedRoles = [] }) => {
-  const { user, loading } = useAuth();
+  const {role,roleLoading:loading}=useRole()
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && !role) {
       router.replace(`/auth/login?redirect=${encodeURIComponent(pathname)}`);
     }
-  }, [loading, user, router, pathname]);
+  }, [loading, role, router, pathname]);
 
   if (loading) return <GlobalLoading />;
-  if (!user) return null;
-  if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
+  if (!role) return null;
+  if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
     router.replace("/auth/login");
     return null;
   }
-
+console.log("private route done over here",role)
   return <>{children}</>;
 };
 

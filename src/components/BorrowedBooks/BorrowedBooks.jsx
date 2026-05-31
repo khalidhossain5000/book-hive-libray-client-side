@@ -32,7 +32,7 @@ const BorrowedBooks = () => {
     enabled: !!user?.email,
     staleTime: 1000 * 60 * 3,
   });
-
+console.log(borrowedBooks,'datan here')
   const openReturnWarning = (borrow) => {
     setSelectedBorrow(borrow);
     setIsWarningOpen(true);
@@ -107,6 +107,7 @@ const BorrowedBooks = () => {
               const title = item.bookTitle || item.title || "Untitled";
               const author = item.bookAuthor || item.author || "Unknown author";
               const status = item.status || "Borrowed";
+              const image = item.bookImage || item.imageUrl || item.image;
               return (
                 <tr
                   key={item._id || item.bookId || title}
@@ -115,9 +116,9 @@ const BorrowedBooks = () => {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
-                        {item.bookImage ? (
+                        {image ? (
                           <Image
-                            src={item.bookImage}
+                            src={image}
                             alt={title}
                             fill
                             className="object-cover"
@@ -182,6 +183,7 @@ const BorrowedBooks = () => {
           const title = item.bookTitle || item.title || "Untitled";
           const author = item.bookAuthor || item.author || "Unknown author";
           const status = item.status || "Borrowed";
+          const image = item.bookImage || item.imageUrl || item.image;
           return (
             <div
               key={item._id || item.bookId || title}
@@ -190,9 +192,9 @@ const BorrowedBooks = () => {
               <div className="p-4 sm:p-5">
                 <div className="flex items-start gap-4">
                   <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
-                    {item.bookImage ? (
+                    {image ? (
                       <Image
-                        src={item.bookImage}
+                        src={image}
                         alt={title}
                         fill
                         className="object-cover"
