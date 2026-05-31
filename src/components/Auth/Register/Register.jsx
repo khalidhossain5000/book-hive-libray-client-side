@@ -94,51 +94,62 @@ const Register = () => {
       });
   };
 
+  //google login
 
-
-
-  
-    //google login
-  
-    const handleGoogleLogin = () => {
-      handleGoogleUser()
-        .then((result) => {
-          toast.success("Google Logged In Successfull", {
-            className: "w-[300px] h-[50px] text-xl font-bold",
-            removeDelay: 1000,
-            position: "top-left",
-            iconTheme: {
-              primary: "#16061e",
-              secondary: "#ef54e2",
-            },
-            style: {
-              border: "1px solid black",
-              color: "white",
-              backgroundImage:
-                "linear-gradient(to bottom right, #31c3df, #3a47d5)",
-            },
-          });
-          console.log(result);
-          router.push("/");
-        })
-        .then((error) => {
-       
-          toast.error(`Opps--${error.code}`, {
-            className: "w-[300px] h-[50px] text-xl font-bold ",
-            removeDelay: 1000,
-            iconTheme: {
-              primary: "#16061e",
-              secondary: "#ef54e2",
-            },
-            style: {
-              border: "1px solid black",
-              color: "white",
-              backgroundImage:
-                "linear-gradient(to bottom right,#0d0518,#87d0c3, #600e8c)",
-            },
-          });
+  const handleGoogleLogin = () => {
+    handleGoogleUser()
+      .then((result) => {
+        toast.success("Google Logged In Successfull", {
+          className: "w-[300px] h-[50px] text-xl font-bold",
+          removeDelay: 1000,
+          position: "top-left",
+          iconTheme: {
+            primary: "#16061e",
+            secondary: "#ef54e2",
+          },
+          style: {
+            border: "1px solid black",
+            color: "white",
+            backgroundImage:
+              "linear-gradient(to bottom right, #31c3df, #3a47d5)",
+          },
         });
-    };
+        const userInfo = {
+          name: result?.user.displayName,
+          email: result?.user?.email,
+          role: "user", //default role
+        };
+        axiosInstance
+          .post("/users", userInfo)
+          .then(() => {})
+          .catch((error) => {
+            const message = error.message || "Unable to save user.";
+            setShowError(message);
+            toast.error(`Unable to save user: ${message}`, {
+              position: "top-right",
+            });
+            console.log(error);
+          });
+
+        router.push("/");
+      })
+      .then((error) => {
+        toast.error(`Opps--${error.code}`, {
+          className: "w-[300px] h-[50px] text-xl font-bold ",
+          removeDelay: 1000,
+          iconTheme: {
+            primary: "#16061e",
+            secondary: "#ef54e2",
+          },
+          style: {
+            border: "1px solid black",
+            color: "white",
+            backgroundImage:
+              "linear-gradient(to bottom right,#0d0518,#87d0c3, #600e8c)",
+          },
+        });
+      });
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4 transition-colors duration-300">
       {/* Main Container */}
@@ -241,7 +252,10 @@ const Register = () => {
 
             {/* Updated Google Button using React Icons */}
             <div className="flex justify-center">
-              <button onClick={handleGoogleLogin} className="flex items-center justify-center gap-3 w-full py-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-[0.98] dark:text-white text-sm font-medium cursor-pointer">
+              <button
+                onClick={handleGoogleLogin}
+                className="flex items-center justify-center gap-3 w-full py-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all active:scale-[0.98] dark:text-white text-sm font-medium cursor-pointer"
+              >
                 <FcGoogle size={22} /> {/* React Icon */}
                 Sign up with Google
               </button>

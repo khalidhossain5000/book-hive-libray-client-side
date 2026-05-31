@@ -6,20 +6,25 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import loginImg from "../../../assets/AuthBg/auth-pagesbds.png";
 import { FcGoogle } from "react-icons/fc";
+import { ShieldCheck } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
+import useAxios from "@/hooks/useAxios";
+
+const adminCredentials = {
+  email: "admin@bookhive.com",
+  password: "admin@bookhive.comKk",
+};
 
 const Login = () => {
   const router = useRouter();
   const [wrongPassword, setWrongPassword] = useState("");
   const { logInUser, handleGoogleUser, loading } = useAuth();
-  const handleLogin = (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
-    const { email, password } = Object.fromEntries(formData.entries());
+  const axiosInstance=useAxios()
+
+  const loginWithCredentials = (email, password, redirectPath = "/") => {
     setWrongPassword("");
-    // FIREBASE USER
-    logInUser(email, password)
+
+    return logInUser(email, password)
       .then((result) => {
         toast.success(`Logged in successfully`, {
           position: "top-center",
@@ -38,7 +43,7 @@ const Login = () => {
           },
         });
         console.log(result);
-        router.push("/");
+        router.push(redirectPath);
       })
       .catch((error) => {
         const message =
@@ -65,6 +70,22 @@ const Login = () => {
       });
   };
 
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const { email, password } = Object.fromEntries(formData.entries());
+    loginWithCredentials(email, password);
+  };
+
+  const handleAdminLogin = () => {
+    loginWithCredentials(
+      adminCredentials.email,
+      adminCredentials.password,
+      "/dashboard",
+    );
+  };
+
   //google login
 
   const handleGoogleLogin = () => {
@@ -85,7 +106,25 @@ const Login = () => {
               "linear-gradient(to bottom right, #31c3df, #3a47d5)",
           },
         });
-        console.log(result);
+        
+        
+         const userInfo = {
+          name:result?.user.displayName,
+                  email:result?.user?.email,
+                  role: "user", //default role
+                };
+                axiosInstance
+                  .post("/users", userInfo)
+                  .then(() => {})
+                  .catch((error) => {
+                    const message = error.message || "Unable to save user.";
+                    setShowError(message);
+                    toast.error(`Unable to save user: ${message}`, {
+                      position: "top-right",
+                    });
+                    console.log(error);
+                  });
+       
         router.push("/");
       })
       .catch((error) => {
@@ -192,6 +231,20 @@ const Login = () => {
                 className={`w-full py-3 ${loading ? "bg-slate-400 cursor-not-allowed" : "bg-teal-800 hover:bg-teal-700"} text-white font-bold rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-teal-900/20 mt-2`}
               >
                 {loading ? "Signing In..." : "Sign In"}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleAdminLogin}
+                disabled={loading}
+                className={`flex w-full items-center justify-center gap-2 rounded-lg border py-3 font-bold transition-all active:scale-[0.98] ${
+                  loading
+                    ? "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400 dark:border-slate-700 dark:bg-slate-800"
+                    : "border-teal-200 bg-teal-50 text-teal-800 hover:bg-teal-100 dark:border-teal-500/30 dark:bg-teal-400/10 dark:text-teal-200 dark:hover:bg-teal-400/15"
+                }`}
+              >
+                <ShieldCheck className="h-5 w-5" />
+                {loading ? "Signing In..." : "Login as Admin"}
               </button>
             </form>
 
