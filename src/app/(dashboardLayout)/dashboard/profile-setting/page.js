@@ -1,5 +1,6 @@
 import React from 'react';
 import SettingsProfile from '@/components/dashboard/settings/settingsProfile';
+import PrivateRoute from '@/components/PrivateRoute/PrivateRoute';
 
 export const metadata = {
   title: 'Profile Settings | BookHive Dashboard',
@@ -8,7 +9,10 @@ export const metadata = {
 
 const ProfileSetting = () => {
     return (
+        <PrivateRoute>
         <SettingsProfile />
+
+        </PrivateRoute>
     );
 };
 

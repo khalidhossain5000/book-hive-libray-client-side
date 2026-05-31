@@ -4,19 +4,31 @@ import { X, LogOut } from "lucide-react";
 import PrimaryButton from "../commonButton/PrimaryButton";
 import SecondaryButton from "../commonButton/SecondaryButton";
 
-const MobileNavbar = ({ isOpen, setIsOpen, navLinks, user, handleLogout }) => {
+const isActiveRoute = (pathname, path) => {
+  if (path === "/") return pathname === "/";
+  return pathname === path || pathname.startsWith(`${path}/`);
+};
+
+const MobileNavbar = ({
+  isOpen,
+  setIsOpen,
+  navLinks,
+  user,
+  handleLogout,
+  currentPath,
+}) => {
   return (
     <div
-      className={`flex flex-col justify-between pb-5 fixed top-0 right-0 h-screen w-[280px] bg-white z-[999] shadow-2xl transition-all duration-300 ${
+      className={`fixed right-0 top-0 z-[999] flex h-screen w-[280px] flex-col justify-between bg-white pb-5 shadow-2xl transition-all duration-300 dark:bg-slate-950 ${
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-5 border-b border-gray-200">
+      <div className="flex items-center justify-between border-b border-gray-200 p-5 dark:border-slate-800">
         <div></div>
         <button
           onClick={() => setIsOpen(false)}
-          className="p-2 rounded-full hover:bg-gray-100 transition"
+          className="rounded-full p-2 transition hover:bg-gray-100 dark:text-slate-100 dark:hover:bg-slate-800"
         >
           <X size={24} />
         </button>
@@ -24,16 +36,25 @@ const MobileNavbar = ({ isOpen, setIsOpen, navLinks, user, handleLogout }) => {
 
       {/* Nav Links */}
       <div className="flex flex-col p-5 gap-3">
-        {navLinks.map((link) => (
-          <Link
-            key={link.id}
-            href={link.path}
-            onClick={() => setIsOpen(false)}
-            className="px-4 py-3 rounded-xl font-medium text-gray-700 hover:bg-teal-50 hover:text-teal-600 transition-all duration-300"
-          >
-            {link.name}
-          </Link>
-        ))}
+        {navLinks.map((link) => {
+          const isActive = isActiveRoute(currentPath, link.path);
+
+          return (
+            <Link
+              key={link.id}
+              href={link.path}
+              onClick={() => setIsOpen(false)}
+              aria-current={isActive ? "page" : undefined}
+              className={`rounded-xl px-4 py-3 font-medium transition-all duration-300 ${
+                isActive
+                  ? "bg-teal-50 text-teal-700 dark:bg-teal-950/40 dark:text-teal-300"
+                  : "text-gray-700 hover:bg-teal-50 hover:text-teal-600 dark:text-slate-200 dark:hover:bg-slate-900 dark:hover:text-teal-300"
+              }`}
+            >
+              {link.name}
+            </Link>
+          );
+        })}
       </div>
       {/* auth buttons */}
       <div className="flex flex-col gap-3 font-inter px-5 mt-auto mb-5">

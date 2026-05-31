@@ -3,10 +3,9 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { Bell, Menu, Moon, Search, LogOut, Heart } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Menu, LogOut, Heart } from "lucide-react";
 
-import CommonButton from "../commonButton/SecondaryButton";
 import MobileNavbar from "./MobileNav";
 import { ModeToggle } from "../ThemeToggle/ModeToggle";
 import PrimaryButton from "../commonButton/PrimaryButton";
@@ -38,8 +37,14 @@ export const navLinks = [
     private: true,
   },
 ];
+
+const isActiveRoute = (pathname, path) => {
+  if (path === "/") return pathname === "/";
+  return pathname === path || pathname.startsWith(`${path}/`);
+};
+
 const Navbar = () => {
-  const router = useRouter();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const { user, loading, logOutUser } = useAuth();
   const filteredNavLinks = user
@@ -88,18 +93,30 @@ const Navbar = () => {
           {/* middle side */}
           {/* DESKTOP NAV */}
           <div className="hidden lg:flex items-center gap-1">
-            {filteredNavLinks.map((link) => (
-              <Link
-                key={link.id}
-                href={link.path}
-                className="relative px-4 py-2 text-gray-600 dark:text-text-primary font-medium rounded-lg hover:text-teal-600 transition-all duration-300 group"
-              >
-                {link.name}
+            {filteredNavLinks.map((link) => {
+              const isActive = isActiveRoute(pathname, link.path);
 
-                {/* Hover Underline */}
-                <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-teal-600 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-            ))}
+              return (
+                <Link
+                  key={link.id}
+                  href={link.path}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`relative rounded-lg px-4 py-2 font-medium transition-all duration-300 group ${
+                    isActive
+                      ? "bg-teal-50 text-teal-700 dark:bg-teal-950/40 dark:text-teal-300"
+                      : "text-gray-600 hover:text-teal-600 dark:text-text-primary dark:hover:text-teal-300"
+                  }`}
+                >
+                  {link.name}
+
+                  <span
+                    className={`absolute bottom-0 left-0 h-[2px] bg-teal-600 transition-all duration-300 dark:bg-teal-300 ${
+                      isActive ? "w-full" : "w-0 group-hover:w-full"
+                    }`}
+                  ></span>
+                </Link>
+              );
+            })}
           </div>
           {/* RIGHT SIDE */}
           <div className="flex items-center gap-2 relative z-[999999999999999999999999]">
@@ -109,14 +126,16 @@ const Navbar = () => {
             {/* Wishlist icon (private per-user later) */}
             <Link
               href="/wishlist"
-              className="hidden md:flex items-center justify-center w-11 h-11 rounded-full hover:bg-gray-100 transition"
+              className={`hidden h-11 w-11 items-center justify-center rounded-full transition md:flex ${
+                isActiveRoute(pathname, "/wishlist")
+                  ? "bg-teal-50 text-teal-700 dark:bg-teal-950/40 dark:text-teal-300"
+                  : "text-gray-600 hover:bg-gray-100 dark:text-text-primary dark:hover:bg-slate-800"
+              }`}
               title="Wishlist"
               aria-label="Wishlist"
+              aria-current={isActiveRoute(pathname, "/wishlist") ? "page" : undefined}
             >
-              <Heart
-                size={20}
-                className="text-gray-600 dark:text-text-primary"
-              />
+              <Heart size={20} />
             </Link>
 
             {/* AUTH: show user info and logout when signed in, otherwise show auth buttons */}
@@ -183,6 +202,7 @@ const Navbar = () => {
           navLinks={filteredNavLinks}
           user={user}
           handleLogout={handleLogout}
+          currentPath={pathname}
         />
       </div>
     </header>
