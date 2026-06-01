@@ -19,7 +19,7 @@ const MobileNavbar = ({
 }) => {
   return (
     <div
-      className={`fixed right-0 top-0 z-[999] flex h-screen w-[280px] flex-col justify-between bg-white pb-5 shadow-2xl transition-all duration-300 dark:bg-slate-950 ${
+      className={`fixed right-0 top-0 flex h-screen w-[280px] flex-col justify-between bg-white pb-5 shadow-2xl transition-all duration-300 dark:bg-slate-950 z-[999999999999999999999999999999999999999999999999999999] ${
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >

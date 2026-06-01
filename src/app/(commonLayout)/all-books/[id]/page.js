@@ -6,7 +6,7 @@ import React from "react";
 
 const BooksDetailsPage = () => {
   return (
-    <PrivateRoute>
+    <PrivateRoute allowedRoles={["admin", "user"]}>
       <BooksDetails />
     </PrivateRoute>
   );

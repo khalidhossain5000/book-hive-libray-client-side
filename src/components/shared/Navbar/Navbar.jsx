@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu, LogOut, Heart } from "lucide-react";
 
 import MobileNavbar from "./MobileNav";
@@ -60,7 +60,7 @@ const Navbar = () => {
   const filteredNavLinks = user
     ? navLinks
     : navLinks.filter((link) => !link.private);
-
+const router=useRouter()
   const handleLogout = async () => {
     logOutUser().then(() => {
       toast.success(`Log Out Successfull`, {
@@ -79,6 +79,7 @@ const Navbar = () => {
             "0 20px 40px rgba(220, 38, 38, 0.35), 0 0 25px rgba(248, 113, 113, 0.45)",
         },
       });
+      router.push("/auth/login")
     });
   };
 
@@ -196,7 +197,7 @@ const Navbar = () => {
             {/* MOBILE MENU BUTTON */}
             <button
               onClick={() => setIsOpen(true)}
-              className="md:hidden flex items-center justify-center w-11 h-11 rounded-full hover:bg-gray-100 transition"
+              className="lg:hidden flex items-center justify-center w-11 h-11 rounded-full hover:bg-gray-100 transition"
             >
               <Menu size={24} />
             </button>
