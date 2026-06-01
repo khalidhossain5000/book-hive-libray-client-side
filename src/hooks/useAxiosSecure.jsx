@@ -6,7 +6,7 @@ import GlobalLoading from "@/components/shared/GlobalLoading";
 
 const axiosSecure = axios.create({
   // baseURL: `http://localhost:5000`,
-   baseURL: process.env.PRODUCTION_URL
+   baseURL: process.env.NEXT_PUBLIC_PRODUCTION_URL
 });
 
 const useAxiosSecure = () => {
