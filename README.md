@@ -1,4 +1,4 @@
-# BookHive Library Management Client
+# BookHive Library Management System
 
 BookHive is a modern library management web application built with Next.js. It provides a polished public book browsing experience, Firebase authentication, role-based dashboards, admin book/user management, borrowing workflows, wishlists, and visual dashboard analytics.
 
