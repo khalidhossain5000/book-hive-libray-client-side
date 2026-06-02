@@ -5,9 +5,9 @@ BookHive is a modern library management web application built with Next.js. It p
 
 ## Tech Stack
 
-- Next.js 16
-- React 19
-- Tailwind CSS 4
+- Next.js 
+- React 
+- Tailwind CSS 
 - shadcn/ui styling
 - Firebase Authentication
 - TanStack React Query
