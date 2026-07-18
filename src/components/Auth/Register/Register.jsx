@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import authImg from "../../../assets/AuthBg/auth-pagesbds.png";
-// React Icon Import
 import { FcGoogle } from "react-icons/fc";
 import useAxios from "@/hooks/useAxios";
 import useAuth from "@/hooks/useAuth";
