@@ -15,14 +15,14 @@ const Register = () => {
   const axiosInstance = useAxios();
   const [passwordError, setPasswordError] = useState("");
   const [showError, setShowError] = useState("");
-  const { createUser, updateUserProfile, setUser, loading } = useAuth();
+  const { createUser, updateUserProfile, setUser, loading ,handleGoogleUser} = useAuth();
 
   const handleRegister = (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
     const { email, password, name } = Object.fromEntries(formData.entries());
-    console.log(email, password, name, "this is form data over here");
+
     setPasswordError("");
     setShowError("");
     // password validation start
