@@ -1,4 +1,4 @@
-# 📚 BookHive
+# 📚 BookHive - A Smarter Way to Manage Your Library
 
 ## 📖 Overview
 
