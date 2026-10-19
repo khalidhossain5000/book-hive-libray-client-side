@@ -18,7 +18,7 @@ const adminCredentials = {
 const Login = () => {
   const router = useRouter();
   const [wrongPassword, setWrongPassword] = useState("");
-  const { logInUser, handleGoogleUser, loading } = useAuth();
+  const { logInUser, handleGoogleUser, loading ,setLoading} = useAuth();
   const axiosInstance=useAxios()
 
   const loginWithCredentials = (email, password, redirectPath = "/") => {
@@ -31,7 +31,7 @@ const Login = () => {
           className: "w-[260px] h-[72px] text-sm font-semibold",
           removeDelay: 1200,
           iconTheme: {
-            primary: "#dc2626",
+            primary: "#00cfff",
             secondary: "#fecaca",
           },
           style: {
@@ -67,6 +67,7 @@ const Login = () => {
               "0 16px 30px rgba(220, 38, 38, 0.3), 0 0 18px rgba(220, 38, 38, 0.4)",
           },
         });
+        setLoading(false)
       });
   };
 

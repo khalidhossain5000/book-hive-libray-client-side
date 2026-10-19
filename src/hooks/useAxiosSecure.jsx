@@ -1,18 +1,54 @@
 "use client";
 import axios from "axios";
-import React from "react";
+import { useEffect } from "react";
 import useAuth from "./useAuth";
-import GlobalLoading from "@/components/shared/GlobalLoading";
 
 const axiosSecure = axios.create({
-  // baseURL: `http://localhost:5000`,
-   baseURL: process.env.NEXT_PUBLIC_PRODUCTION_URL
+  baseURL: process.env.NEXT_PUBLIC_PRODUCTION_URL || "http://localhost:5000",
 });
 
 const useAxiosSecure = () => {
   const { user, logOut } = useAuth();
 
-  if (!user?.accessToken) return <GlobalLoading />;
+  useEffect(() => {
+    const requestInterceptor = axiosSecure.interceptors.request.use(
+      async (config) => {
+        if (!user) return config;
+
+        try {
+          const token = await user.getIdToken?.();
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          }
+        } catch (error) {
+          console.error("Failed to fetch Firebase auth token", error);
+        }
+
+        return config;
+      },
+      (error) => Promise.reject(error),
+    );
+
+    const responseInterceptor = axiosSecure.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const status = error?.response?.status;
+
+        if (status === 401 || status === 403) {
+          if (typeof logOut === "function") {
+            await logOut();
+          }
+        }
+
+        return Promise.reject(error);
+      },
+    );
+
+    return () => {
+      axiosSecure.interceptors.request.eject(requestInterceptor);
+      axiosSecure.interceptors.response.eject(responseInterceptor);
+    };
+  }, [user, logOut]);
   axiosSecure.interceptors.request.use(
     (config) => {
       config.headers.Authorization = `Bearer ${user?.accessToken}`;
