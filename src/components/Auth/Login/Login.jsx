@@ -229,7 +229,7 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-3 ${loading ? "bg-slate-400 cursor-not-allowed" : "bg-teal-800 hover:bg-teal-700"} text-white font-bold rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-teal-900/20 mt-2`}
+                className={`cursor-pointer w-full py-3 ${loading ? "bg-slate-400 cursor-not-allowed" : "bg-teal-800 hover:bg-teal-700"} text-white font-bold rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-teal-900/20 mt-2`}
               >
                 {loading ? "Signing In..." : "Sign In"}
               </button>
@@ -238,7 +238,7 @@ const Login = () => {
                 type="button"
                 onClick={handleAdminLogin}
                 disabled={loading}
-                className={`flex w-full items-center justify-center gap-2 rounded-lg border py-3 font-bold transition-all active:scale-[0.98] ${
+                className={`cursor-pointer flex w-full items-center justify-center gap-2 rounded-lg border py-3 font-bold transition-all active:scale-[0.98] ${
                   loading
                     ? "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400 dark:border-slate-700 dark:bg-slate-800"
                     : "border-teal-200 bg-teal-50 text-teal-800 hover:bg-teal-100 dark:border-teal-500/30 dark:bg-teal-400/10 dark:text-teal-200 dark:hover:bg-teal-400/15"
