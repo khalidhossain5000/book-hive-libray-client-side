@@ -26,22 +26,25 @@ const Login = () => {
 
     return logInUser(email, password)
       .then((result) => {
-        toast.success(`Logged in successfully`, {
-          position: "top-center",
-          className: "w-[260px] h-[72px] text-sm font-semibold",
-          removeDelay: 1200,
-          iconTheme: {
-            primary: "#00cfff",
-            secondary: "#fecaca",
-          },
-          style: {
-            border: "1px solid rgba(220, 38, 38, 0.65)",
-            color: "white",
-            backgroundImage: "linear-gradient(135deg, #991b1b, #ef4444)",
-            boxShadow:
-              "0 16px 30px rgba(220, 38, 38, 0.25), 0 0 18px rgba(248, 113, 113, 0.35)",
-          },
-        });
+        
+toast.success("Logged in successfully", {
+  position: "top-center",
+  className: "w-[260px] h-[72px] text-sm font-semibold",
+  duration: 1200,
+  iconTheme: {
+    primary: "#22c55e",
+    secondary: "#dcfce7",
+  },
+  style: {
+    border: "1px solid rgba(34, 197, 94, 0.65)",
+    borderRadius: "12px",
+    color: "#ffffff",
+    backgroundImage: "linear-gradient(135deg, #065f46, #16a34a)",
+    boxShadow:
+      "0 16px 30px rgba(22, 163, 74, 0.25), 0 0 18px rgba(74, 222, 128, 0.25)",
+  },
+});
+
         console.log(result);
         router.push(redirectPath);
       })
