@@ -148,7 +148,7 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4 transition-colors duration-300">
       {/* Main Container */}
-      <div className="flex flex-col md:flex-row w-full max-w-5xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden min-h-[600px]">
+      <div className="flex flex-col md:flex-row w-full max-w-5xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden min-h-150">
         {/* Left Side: Image & Branding */}
         <div className="relative w-full md:w-1/2 hidden md:flex flex-col justify-end p-10 text-white">
           <Image
