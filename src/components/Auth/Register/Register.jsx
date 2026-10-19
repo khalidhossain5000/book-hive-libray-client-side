@@ -152,7 +152,7 @@ const Register = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4 transition-colors duration-300">
       {/* Main Container */}
-      <div className="flex flex-col md:flex-row w-full max-w-5xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden min-h-[650px]">
+      <div className="flex flex-col md:flex-row w-full max-w-5xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden min-h-162.5">
         {/* Left Side: Image & Branding */}
         <div className="relative w-full md:w-1/2 hidden md:flex flex-col justify-end p-10 text-white">
           <Image
@@ -231,7 +231,7 @@ const Register = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-3 bg-teal-800 text-white font-bold rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-teal-900/20 mt-4 ${loading ? "opacity-70 cursor-not-allowed" : "hover:bg-teal-700"}`}
+                className={`cursor-pointer w-full py-3 bg-teal-800 text-white font-bold rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-teal-900/20 mt-4 ${loading ? "opacity-70 cursor-not-allowed" : "hover:bg-teal-700"}`}
               >
                 {loading ? "Creating Account..." : "Create Account"}
               </button>
