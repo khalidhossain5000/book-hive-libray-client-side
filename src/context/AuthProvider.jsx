@@ -20,10 +20,15 @@ const AuthProvider = ({ children }) => {
    setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
-  const logInUser = (email, password) => {
-    setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password);
-  };
+ const logInUser = async (email, password) => {
+  setLoading(true);
+
+  try {
+    return await signInWithEmailAndPassword(auth, email, password);
+  } finally {
+    setLoading(false);
+  }
+};
   //update profile
   const updateUserProfile = (updatedProfileInfo) => {
     return updateProfile(auth.currentUser, updatedProfileInfo);
